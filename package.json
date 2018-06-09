@@ -1,15 +1,23 @@
 {
   "name": "node-swagger-ui-express",
   "version": "1.0.0",
-  "description": "",
+  "description": "Best automatic swagger-ui with express.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["swagger", "ui", "swagger-ui", "swagger-ui-express", "express", "node", "node-swagger", "node-swagger-ui" , "node-swagger-ui-express"],
+  "author": "Elivelton C. Gama",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egama/node-swagger-ui-express.git"
+  },
+  "bugs": {
+    "url": "https://github.com/egama/node-swagger-ui-express/issues"
+  },
+  "homepage": "https://github.com/egama/node-swagger-ui-express#readme"
 }
