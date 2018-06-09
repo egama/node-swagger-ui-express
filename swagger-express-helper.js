@@ -52,31 +52,41 @@ class HelperSwaggerExpress {
     }
 
     static createGETDoc(_obj, _a) {
-        let path = _a.action;
-
-        if (path.toString().indexOf(':') >= 0) {
-            let path_string = path.toString().substring(0, path.toString().indexOf(':') - 1);
-            let params_string = path.toString().substring(path.toString().indexOf(':'));
-            path = path_string == '/' ? "" : path_string;
+        let action = _a.action;
+        let _in = 'query';
+        if (action.toString().indexOf('{') >= 0) {
+            _in = "path";
         }
-        path = path == '/' ? "" : path;
+        else if (action.toString().indexOf('?') >= 0) {
+            _in = "query";
+        }
+        action = action == '/' ? "" : action;
 
-        let _name = _a.controller + path;
+        let _name = _a.controller + action;
         this.createDefault(_name, _obj, _a);
 
         _obj.paths[_name][_a.method].produces = this.defaultProduces();
 
-        _a.request.split('/').map(r => {
-            if (r.toString().trim() != '') {
-                let parameter = {};
-                parameter.name = r.replace(':', '');
-                parameter.in = "path"
+        if (_a.request != null) {
+            _a.request.split('/').map(r => {
+                if (r.toString().trim() != '') {
+                    let parameter = {};
+                    parameter.name = r.replace(':', '');
+                    parameter.in = _in;
 
-                _obj.paths[_name][_a.method].parameters.push(parameter);
-            }
-        });
+                    _obj.paths[_name][_a.method].parameters.push(parameter);
+                }
+            });
+        }
 
         this.response_default(_name, _obj, _a);
+    }
+
+    static createDELETEDoc(_obj, _a) {
+        this.createGETDoc(_obj, _a);
+    }
+    static createPUTDoc(_obj, _a) {
+        this.createPOSTDoc(_obj, _a);
     }
 
     static response_default(_name, _obj, _a) {
@@ -105,6 +115,28 @@ class HelperSwaggerExpress {
         }
     }
 
+
+    static receiveParams(_param, _routI, _arrayOfModels) {
+        if (_param == null)
+            _param = '';
+
+        if (typeof _param == "function") {
+            let instance_param = this.instanceClass(_param);
+            let itemModelResp = _arrayOfModels.find(x => { return x.name == _param.name });
+            if (itemModelResp == null || itemModelResp == 0)
+                _arrayOfModels.push({ name: _param.name, instance: instance_param });
+
+            return _param.name;
+        } else if (typeof _param == "string") {
+            let path = _routI.path;
+            if (path.toString().indexOf(':') >= 0) {
+                let path_string = path.toString().substring(0, path.toString().indexOf(':') - 1);
+                let params_string = path.toString().substring(path.toString().indexOf(':'));
+
+                return params_string;
+            }
+        }
+    }
 }
 
 module.exports = HelperSwaggerExpress;
