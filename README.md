@@ -24,20 +24,20 @@ Created for Node.js, this module has features like an application in a simple an
 ### Methods
 We will use the three methods below to create the swagger
 
-1. ##### initController
+##### 1. initController
 	Method to start controller. Used in every controller/router at the beginning of everything.
 	Parameters:
 	* controllerName - Name of controller/router
 	* express - instance of express
 	* router - instance of router
 
-2. ##### toSwagger
+##### 2. toSwagger
 	Method to include action to swagger. Used in every action you need to include in swagger.
 	Parameters:
 	* ClassResponse - class of response
 	* ClassRequest - class of request
 
-3. ##### swaggerInit
+##### 3. swaggerInit
 	Method to start swagger. Used after route creation. It is used to create the document.
 
 #### Using
@@ -129,6 +129,10 @@ Here is an example implementation.
 >	module.exports.RequestAuthAuthenticate = RequestAuthAuthenticate;
 >	module.exports.ResponseAuthAuthenticate = ResponseAuthAuthenticate;
 >```
+
+
+* Swagger-UI
+`http://localhost:3200/swagger-ui/`
 
 #### Example
 https://github.com/egama/Example-node-swagger-ui-express
