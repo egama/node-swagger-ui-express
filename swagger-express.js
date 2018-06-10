@@ -107,17 +107,9 @@ class ExpressSwagger {
         });
 
         //Carregar as models
-        obj.definitions = {}
+        obj.definitions = {};
         _arrayOfModels.map(_a => {
-            obj.definitions[_a.name] = {}
-            obj.definitions[_a.name].type = "object";
-            obj.definitions[_a.name].properties = {}
-            Object.getOwnPropertyNames(_a.instance).map(_n => {
-                obj.definitions[_a.name].properties[_n] = {}
-                let desc = Object.getOwnPropertyDescriptor(_a.instance, _n);
-                obj.definitions[_a.name].properties[_n].type = typeof desc.value;
-
-            });
+            this.createDefinition(_a.name, _a.instance, obj.definitions);
         });
 
         helper.createJson(JSON.stringify(obj));
@@ -131,6 +123,52 @@ class ExpressSwagger {
         });
 
         return _app;
+    }
+
+    static createDefinition(_name, _instance, _definitionAll) {
+        let _definitions = undefined;
+        if (_definitionAll != null)
+            _definitions = _definitionAll;
+
+        if (_definitions[_name] == null) {
+            _definitions[_name] = {}
+            _definitions[_name].type = "object";
+            _definitions[_name].properties = {};
+
+            Object.getOwnPropertyNames(_instance).map(_n => {
+                _definitions[_name].properties[_n] = {};
+                this.prepareObjDefinitions(_definitions[_name].properties[_n], _instance, _n, _definitions);
+            });
+        }
+
+        return _definitions;
+    }
+    static prepareObjDefinitions(_definition, _instance, _n, _definitionAll) {
+        let desc = Object.getOwnPropertyDescriptor(_instance, _n);
+        if (typeof desc.value != "object") {
+            _definition.type = typeof desc.value;
+        } else {
+            if (JSON.stringify(Object.getPrototypeOf(_instance[_n])) == '[]') { //array
+                _definition.type = "array";
+
+                if (_instance[_n].length > 0) {
+                    _definition.items = {};
+                    if (typeof _instance[_n][0] == "function") {
+                        _definition.items["$ref"] = "#/definitions/" + _instance[_n][0].name;
+                        let inst = helper.instanceClass(_instance[_n][0]);
+                        this.createDefinition(_instance[_n][0].name, inst, _definitionAll);
+                    } else if (typeof _instance[_n][0] == "string") {
+                        _definition.items.type = "string";
+                    }
+                } else {
+                    _definition.example = [];
+                }
+            } else if (JSON.stringify(Object.getPrototypeOf(_instance[_n])) == '{}') {
+                _definition.items = {};
+                _definition.items["$ref"] = "#/definitions/" + _instance[_n].constructor.name;
+                this.createDefinition(_instance[_n].constructor.name, _instance[_n], _definitionAll);
+            }
+        }
     }
 }
 

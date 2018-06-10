@@ -39,6 +39,9 @@ We will use the three methods below to create the swagger
 
 ##### 3. swaggerInit
 	Method to start swagger. Used after route creation. It is used to create the document.
+	* App - App of express. Ex: const app = express();
+	* Version(optional) - Version of documentation or version of application
+	* Title(optional) - Title of documentation or description of appication 
 
 #### Using
 Here is an example implementation.
