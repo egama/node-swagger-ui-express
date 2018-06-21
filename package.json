@@ -1,6 +1,6 @@
 {
   "name": "node-swagger-ui-express",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Best automatic swagger-ui with express.",
   "main": "index.js",
   "scripts": {

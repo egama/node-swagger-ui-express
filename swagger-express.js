@@ -164,8 +164,7 @@ class ExpressSwagger {
                     _definition.example = [];
                 }
             } else if (JSON.stringify(Object.getPrototypeOf(_instance[_n])) == '{}') {
-                _definition.items = {};
-                _definition.items["$ref"] = "#/definitions/" + _instance[_n].constructor.name;
+                _definition["$ref"] = "#/definitions/" + _instance[_n].constructor.name;
                 this.createDefinition(_instance[_n].constructor.name, _instance[_n], _definitionAll);
             }
         }
